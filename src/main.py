@@ -1,7 +1,7 @@
 import os
 import sys
 
-# Add the parent directory of src to sys.path, so Python can find 'src' as a package
+# Add the project root folder (parent of 'src') to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from flask import Flask, send_from_directory
