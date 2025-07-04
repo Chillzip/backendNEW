@@ -1,8 +1,4 @@
 import os
-import sys
-
-# Add the project root folder (parent of 'src') to sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from flask import Flask, send_from_directory
 from flask_login import LoginManager
@@ -10,11 +6,11 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 import stripe
 
-from src.models.user import db, User
-from src.routes.user import user_bp
-from src.routes.auth import auth_bp
-from src.routes.payment import payment_bp
-from src.routes.process import process_bp
+from models.user import db, User
+from routes.user import user_bp
+from routes.auth import auth_bp
+from routes.payment import payment_bp
+from routes.process import process_bp
 
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 
