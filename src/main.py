@@ -1,8 +1,8 @@
 import os
 import sys
 
-# DON'T CHANGE THIS !!!
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+# Add the parent directory of src to sys.path, so Python can find 'src' as a package
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from flask import Flask, send_from_directory
 from flask_login import LoginManager
