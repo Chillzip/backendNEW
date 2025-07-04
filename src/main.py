@@ -16,7 +16,7 @@ from src.routes.auth import auth_bp
 from src.routes.payment import payment_bp
 from src.routes.process import process_bp
 
-app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), \'static\'))
+app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 
 # Production configuration
 app.config[\'SECRET_KEY\'] = os.environ.get(\'SECRET_KEY\') # Removed fallback
