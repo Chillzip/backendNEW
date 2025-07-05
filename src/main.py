@@ -24,17 +24,17 @@ login_manager = LoginManager(app)
 login_manager.login_view = "auth.login"
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-stripe.api_key = "sk_test_..."  # Add your real key when needed
+stripe.api_key = "sk_test_..."  # Replace with your real key when needed
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Register Blueprints
-app.register_blueprint(user_bp)
-app.register_blueprint(auth_bp)
-app.register_blueprint(payment_bp)
-app.register_blueprint(process_bp)
+# Register Blueprints with URL prefixes
+app.register_blueprint(user_bp, url_prefix="/user")
+app.register_blueprint(auth_bp, url_prefix="/auth")
+app.register_blueprint(payment_bp, url_prefix="/payment")
+app.register_blueprint(process_bp, url_prefix="/process")
 
 @app.route("/")
 def index():
