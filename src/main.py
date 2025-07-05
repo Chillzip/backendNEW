@@ -40,6 +40,7 @@ app.register_blueprint(process_bp)
 @app.route("/")
 def index():
     return send_from_directory("../frontend/dist", "index.html")
-
+with app.app_context():
+    db.create_all()
 if __name__ == "__main__":
     app.run(debug=True)
