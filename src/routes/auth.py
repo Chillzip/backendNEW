@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 from src.models.user import db, User
 
-auth_bp = Blueprint('auth', __name__)  # ✅ This must come before any routes
+auth_bp = Blueprint('auth', __name__)  # ✅ THIS is what was missing before
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
