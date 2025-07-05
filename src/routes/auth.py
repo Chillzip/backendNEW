@@ -1,25 +1,44 @@
 from flask import request, jsonify
 from werkzeug.security import generate_password_hash
-from src.models.user import db, User
+from sqlalchemy.exc import IntegrityError
+from src.models.user import db, User  # Make sure this import matches your structure
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
-    print("Register route called")
-    data = request.json
-    print("Request data:", data)
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"message": "Invalid JSON payload"}), 400
 
-    username = data.get("username")
-    email = data.get("email")
-    raw_password = data.get("password")
+        username = data.get("username", "").strip()
+        email = data.get("email", "").strip().lower()
+        raw_password = data.get("password", "")
 
-    if not username or not email or not raw_password:
-        return jsonify({"message": "Missing required fields"}), 400
+        # ✅ Basic validation
+        if not username or not email or not raw_password:
+            return jsonify({"message": "All fields are required"}), 400
 
-    hashed_password = generate_password_hash(raw_password)
+        if len(raw_password) < 6:
+            return jsonify({"message": "Password must be at least 6 characters"}), 400
 
-    new_user = User(username=username, email=email, password_hash=hashed_password)  # ✅ Note this
+        # ✅ Check if user already exists
+        existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
+        if existing_user:
+            return jsonify({"message": "Username or email already registered"}), 409
 
-    db.session.add(new_user)
-    db.session.commit()
+        # ✅ Hash password and create user
+        hashed_password = generate_password_hash(raw_password)
+        new_user = User(username=username, email=email, password_hash=hashed_password)
 
-    return jsonify({"message": "User registered successfully"})
+        db.session.add(new_user)
+        db.session.commit()
+
+        return jsonify({"message": "User registered successfully"}), 201
+
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({"message": "Database integrity error — possibly a duplicate"}), 400
+
+    except Exception as e:
+        print(f"❌ Registration error: {e}")
+        return jsonify({"message": "Something went wrong on the server"}), 500
