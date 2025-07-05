@@ -1,3 +1,9 @@
+from flask import Blueprint, request, jsonify
+from werkzeug.security import generate_password_hash
+from src.models.user import db, User
+
+auth_bp = Blueprint('auth', __name__)  # ✅ This must come before any routes
+
 @auth_bp.route('/register', methods=['POST'])
 def register():
     print("✅ Register route called")
@@ -11,7 +17,6 @@ def register():
     if not username or not email or not raw_password:
         return jsonify({"message": "Missing required fields"}), 400
 
-    from werkzeug.security import generate_password_hash
     hashed_password = generate_password_hash(raw_password)
 
     try:
