@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from werkzeug.security import generate_password_hash
-from src.models.user import db, User  # Make sure this path matches your project structure
+from src.models.user import db, User
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
@@ -17,7 +17,7 @@ def register():
 
     hashed_password = generate_password_hash(raw_password)
 
-    new_user = User(username=username, email=email, password_hash=hashed_password)
+    new_user = User(username=username, email=email, password_hash=hashed_password)  # ✅ Note this
 
     db.session.add(new_user)
     db.session.commit()
